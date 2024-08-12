@@ -17,6 +17,8 @@ export const action = async ({ request }: { request: Request }) => {
     return json<ActionData>({ error: "All fields are required" }, { status: 400 });
   }
 
+  // check if username or email are already registered
+
   try {
     await createUser(username, email, password);
     return redirect("/login");
