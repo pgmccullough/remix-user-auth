@@ -24,6 +24,6 @@ export const sendEmail = async (
   try {
     await sendMail({from, to, subject, html})
   } catch(error) {
-    console.error(error);
+    console.error(error)
   }
 }
