@@ -29,10 +29,10 @@ export const deleteUser = async (userId: number) => {
   }
 };
 
-export const getUserById = async (userId: number) => {
+export const getUserByUsername = async (username: string) => {
   try {
     return await prisma.user.findUnique({
-      where: { id: userId },
+      where: { username },
     });
   } catch (error) {
     throw new Error(`Error fetching user: ${handlePrismaError(error)}`);
