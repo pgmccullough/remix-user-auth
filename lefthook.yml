@@ -5,5 +5,5 @@ pre-commit:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: npx biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
     lint-fix:
-      glob: "*.{js,ts,jsx,tsx}"
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: npx eslint --fix {staged_files}
