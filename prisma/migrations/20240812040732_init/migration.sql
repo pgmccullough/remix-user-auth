@@ -6,6 +6,8 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "salt" TEXT NOT NULL,
     "role" TEXT NOT NULL DEFAULT 'user',
+    "confirmCode" VARCHAR(6) NOT NULL,
+    "confirmed" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

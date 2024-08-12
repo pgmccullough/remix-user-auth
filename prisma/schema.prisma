@@ -8,12 +8,14 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  username  String    @unique
-  email     String    @unique
-  password  String
-  salt      String
-  role      String    @default("user")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          Int         @id @default(autoincrement())
+  username    String      @unique
+  email       String      @unique
+  password    String
+  salt        String
+  role        String      @default("user")
+  confirmCode String      @db.VarChar(6)
+  confirmed   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }

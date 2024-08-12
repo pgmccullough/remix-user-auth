@@ -1,6 +1,7 @@
 import { prisma } from '~/models/prismaClient';
 import { handlePrismaError } from '~/utils/prismaErrors';
 import { hash } from '~/utils/passwordUtils';
+import { numberGen } from '~/utils/numberGen';
 
 export const createUser = async (username: string, email: string, password: string) => {
   try {
@@ -10,7 +11,8 @@ export const createUser = async (username: string, email: string, password: stri
         username,
         email,
         password: derivedKey,
-        salt
+        salt,
+        confirmCode: numberGen(6)
       },
     });
     return newUser;
@@ -31,8 +33,13 @@ export const deleteUser = async (userId: number) => {
 
 export const getUserByUsername = async (username: string) => {
   try {
-    return await prisma.user.findUnique({
-      where: { username },
+    return await prisma.user.findFirst({
+      where: {
+        username: {
+          equals: username,
+          mode: 'insensitive',
+        },
+      },
     });
   } catch (error) {
     throw new Error(`Error fetching user: ${handlePrismaError(error)}`);
