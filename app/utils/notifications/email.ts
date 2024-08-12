@@ -1,4 +1,4 @@
-import { createTransport } from 'nodemailer';
+import { createTransport } from 'nodemailer'
 
 export type SMTPData = {
     service: string,
@@ -20,7 +20,7 @@ export const sendEmail = async (
   smtpData: SMTPData
 ) => {
   const { sendMail } = createTransport(smtpData)
-  console.log(to, subject, text, html);
+  console.log(to, subject, text, html)
   try {
     await sendMail({from, to, subject, html})
   } catch(error) {
