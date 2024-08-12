@@ -13,18 +13,18 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const { user } = useLoaderData<{ user?: User }>() || {};
-    return (
-        <div>
-        <h1>Private</h1>
-        <p>Hey, you can only see this because you are logged in as {user!.username}!</p>
-        <p>People who are not logged in are redirected to the login page.</p>
-        </div>
-    );
+  return (
+    <div>
+      <h1>Private</h1>
+      <p>Hey, you can only see this because you are logged in as {user!.username}!</p>
+      <p>People who are not logged in are redirected to the login page.</p>
+    </div>
+  );
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-    const user = await authenticator.isAuthenticated(request, {
-        failureRedirect: "/login",
-    });
-    return json({ user })
+  const user = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/login",
+  });
+  return json({ user })
 }
