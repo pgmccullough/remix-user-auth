@@ -12,17 +12,17 @@ export type SMTPData = {
 }
 
 export const sendEmail = async (
-    from: string,
-    to: string, 
-    subject: string, 
-    text: string, 
-    html: string,
-    smtpData: SMTPData
+  from: string,
+  to: string, 
+  subject: string, 
+  text: string, 
+  html: string,
+  smtpData: SMTPData
 ) => {
-    const { sendMail } = createTransport(smtpData)
-    console.log(to, subject, text, html);
-    try {
-        await sendMail({from, to, subject, html})
+  const { sendMail } = createTransport(smtpData)
+  console.log(to, subject, text, html);
+  try {
+    await sendMail({from, to, subject, html})
   } catch(error) {
     console.error(error);
   }

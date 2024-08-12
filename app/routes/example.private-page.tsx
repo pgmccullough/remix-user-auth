@@ -12,7 +12,7 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-    const { user } = useLoaderData<{ user?: User }>() || {};
+  const { user } = useLoaderData<{ user?: User }>() || {};
     return (
         <div>
         <h1>Private</h1>
