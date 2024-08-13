@@ -25,6 +25,7 @@ module.exports = {
   extends: ['eslint:recommended'],
 
   rules: {
+    'eol-last': ['error', 'always'],
     'indent': ['error', 2],
     'semi': ['error', 'never'],
     'quotes': ['error', 'single'],

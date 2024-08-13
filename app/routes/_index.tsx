@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import { Nav } from "~/components/Nav/Nav";
 
 export const meta: MetaFunction = () => {
   return [
@@ -9,9 +10,12 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div>
-      <h1>Home</h1>
-      <p>Welcome to a basic Remix Setup with user auth</p>
-    </div>
+    <>
+      <Nav />
+      <div>
+        <h1>Home</h1>
+        <p>Welcome to a basic Remix Setup with user auth</p>
+      </div>
+    </>
   );
 }

@@ -1,21 +1,21 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { authenticator } from "~/services/auth.server";
-import type { User } from "@prisma/client";
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
+import { authenticator } from '~/services/auth.server'
+import type { User } from '@prisma/client'
 import { getAllUsers } from '~/controllers/userController'
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Init Remix with Auth" },
-    { name: "description", content: "Basic starting point for user-based Remix" },
-  ];
-};
+    { title: 'Init Remix with Auth' },
+    { name: 'description', content: 'Basic starting point for user-based Remix' },
+  ]
+}
 
 export default function Index() {
   const { user, userList } = useLoaderData<{ user?: User, userList?: Array<User> }>() || {}
 
-  if(user.role !== "admin") console.log("you should not have access to this...");
+  if(user?.role !== 'admin') console.log('you should not have access to this...')
 
   return (
     <div>
