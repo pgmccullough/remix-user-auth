@@ -1,5 +1,5 @@
 import { json, redirect } from '@remix-run/node'
-import type { ActionFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { createUser, getUserBy } from '~/controllers/userController'
 import { handlePrismaError } from '~/utils/prismaErrors'
@@ -29,7 +29,7 @@ export default function Screen() {
           <label htmlFor="password">Password:</label>
           <input type="password" name="password" id="password" />
         </div>
-        {actionData?.error && <div style={{ color: "red" }}>{actionData.error}</div>}
+        {actionData?.error && <div style={{ color: 'red' }}>{actionData.error}</div>}
         <button type="submit">Register</button>
       </Form>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
@@ -55,11 +55,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   if (!username || !email || !password) {
-    throwCreateError('All fields are required')
+    return throwCreateError('All fields are required')
   }
 
   if(await getUserBy('username', username) || await getUserBy('email', email)) {
-    throwCreateError('An account with this username or email address already exists.')
+    return throwCreateError('An account with this username or email address already exists.')
   }
 
   try {
@@ -68,4 +68,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   } catch (error) {
     return json<ActionData>({ error: `Error creating user: ${handlePrismaError(error)}` }, { status: 500 })
   }
-};
+}
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get('Cookie'))
+  const errorMessage = session.get('errorMessage')
+  if(errorMessage) {
+    const headers = new Headers({
+      'Set-Cookie': await commitSession(session),
+    })
+    return json({ errorMessage }, { headers })
+  }
+  return null
+}

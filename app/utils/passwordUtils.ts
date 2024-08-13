@@ -1,8 +1,8 @@
 import { randomBytes,scrypt } from "crypto";
 
 export const hash: (password: string) => Promise<{salt: string, derivedKey: string}> = async (password: string) => {
-    return new Promise((resolve, reject) => {
-        const salt = randomBytes(16).toString("hex")
+  return new Promise((resolve, reject) => {
+    const salt = randomBytes(16).toString("hex")
         scrypt(password, salt, 64, (err, derivedKey) => {
             if (err) reject(err);
             resolve({salt, derivedKey: derivedKey.toString('hex')})
