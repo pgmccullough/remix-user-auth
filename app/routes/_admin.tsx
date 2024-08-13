@@ -1,5 +1,5 @@
-import { Outlet } from "@remix-run/react";
-import { Nav } from "~/components/Nav/Nav";
+import { Outlet } from '@remix-run/react'
+import { Nav } from '~/components/Nav/Nav'
 
 export default function Layout() {
   return (

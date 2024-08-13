@@ -1,12 +1,12 @@
-import type { MetaFunction } from "@remix-run/node";
-import { Nav } from "~/components/Nav/Nav";
+import type { MetaFunction } from '@remix-run/node'
+import { Nav } from '~/components/Nav/Nav'
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Init Remix with Auth" },
-    { name: "description", content: "Basic starting point for user-based Remix" },
-  ];
-};
+    { title: 'Init Remix with Auth' },
+    { name: 'description', content: 'Basic starting point for user-based Remix' },
+  ]
+}
 
 export default function Index() {
   return (
@@ -17,5 +17,5 @@ export default function Index() {
         <p>Welcome to a basic Remix Setup with user auth</p>
       </div>
     </>
-  );
+  )
 }
