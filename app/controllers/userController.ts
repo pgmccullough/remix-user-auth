@@ -1,11 +1,11 @@
-import { prisma } from '~/models/prismaClient';
-import { handlePrismaError } from '~/utils/prismaErrors';
-import { hash } from '~/utils/passwordUtils';
-import { numberGen } from '~/utils/numberGen';
+import { prisma } from '~/models/prismaClient'
+import { handlePrismaError } from '~/utils/prismaErrors'
+import { hash } from '~/utils/passwordUtils'
+import { numberGen } from '~/utils/numberGen'
 
 export const createUser = async (username: string, email: string, password: string) => {
   try {
-    const { salt, derivedKey } = await hash(password);
+    const { salt, derivedKey } = await hash(password)
     const newUser = await prisma.user.create({
       data: {
         username,
@@ -14,22 +14,22 @@ export const createUser = async (username: string, email: string, password: stri
         salt,
         confirmCode: numberGen(6)
       },
-    });
-    return newUser;
+    })
+    return newUser
   } catch (error) {
-    throw new Error(`Error creating user: ${handlePrismaError(error)}`);
+    throw new Error(`Error creating user: ${handlePrismaError(error)}`)
   }
-};
+}
 
 export const deleteUser = async (userId: number) => {
   try {
     await prisma.user.delete({
       where: { id: userId },
-    });
+    })
   } catch (error) {
-    throw new Error(`Error deleting user: ${handlePrismaError(error)}`);
+    throw new Error(`Error deleting user: ${handlePrismaError(error)}`)
   }
-};
+}
 
 export const getUserBy = async (field: 'email' | 'id' | 'username', value: string) => {
   try {
@@ -48,8 +48,8 @@ export const getUserBy = async (field: 'email' | 'id' | 'username', value: strin
 
 export const getAllUsers = async () => {
   try {
-    return await prisma.user.findMany();
+    return await prisma.user.findMany()
   } catch (error) {
-    throw new Error(`Error fetching users: ${handlePrismaError(error)}`);
+    throw new Error(`Error fetching users: ${handlePrismaError(error)}`)
   }
-};
+}

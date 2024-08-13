@@ -1,34 +1,17 @@
-import { json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
-import { createUser } from "~/controllers/userController";
-import { handlePrismaError } from "~/utils/prismaErrors";
+import { json, redirect } from '@remix-run/node'
+import type { ActionFunctionArgs } from '@remix-run/node'
+import { Form, useActionData, useLoaderData } from '@remix-run/react'
+import { createUser, getUserBy } from '~/controllers/userController'
+import { handlePrismaError } from '~/utils/prismaErrors'
+import { commitSession, getSession } from '~/services/session.server'
 
 type ActionData = {
   error?: string;
 };
 
-export const action = async ({ request }: { request: Request }) => {
-  const formData = new URLSearchParams(await request.text());
-  const username = formData.get("username") || "";
-  const email = formData.get("email") || "";
-  const password = formData.get("password") || "";
-
-  if (!username || !email || !password) {
-    return json<ActionData>({ error: "All fields are required" }, { status: 400 });
-  }
-
-  // check if username or email are already registered
-
-  try {
-    await createUser(username, email, password);
-    return redirect("/login");
-  } catch (error) {
-    return json<ActionData>({ error: `Error creating user: ${handlePrismaError(error)}` }, { status: 500 });
-  }
-};
-
-export default function Register() {
-  const actionData = useActionData<ActionData>();
+export default function Screen() {
+  const actionData = useActionData<ActionData>()
+  const { errorMessage } = useLoaderData<{ errorMessage?: string }>() || {}
 
   return (
     <div>
@@ -49,6 +32,40 @@ export default function Register() {
         {actionData?.error && <div style={{ color: "red" }}>{actionData.error}</div>}
         <button type="submit">Register</button>
       </Form>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
     </div>
-  );
+  )
 }
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = new URLSearchParams(await request.text())
+  const username = formData.get('username') || ''
+  const email = formData.get('email') || ''
+  const password = formData.get('password') || ''
+
+  const throwCreateError = async (errorMessage: string) => {
+    const session = await getSession(request.headers.get('Cookie'))
+    session.flash('errorMessage', errorMessage)
+    const sessionCookie = await commitSession(session)
+    return redirect('/register', {
+      headers: {
+        'Set-Cookie': sessionCookie,
+      },
+    })
+  }
+
+  if (!username || !email || !password) {
+    throwCreateError('All fields are required')
+  }
+
+  if(await getUserBy('username', username) || await getUserBy('email', email)) {
+    throwCreateError('An account with this username or email address already exists.')
+  }
+
+  try {
+    await createUser(username, email, password)
+    return redirect('/login')
+  } catch (error) {
+    return json<ActionData>({ error: `Error creating user: ${handlePrismaError(error)}` }, { status: 500 })
+  }
+};

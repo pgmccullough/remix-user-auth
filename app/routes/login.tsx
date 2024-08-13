@@ -5,7 +5,7 @@ import { authenticator } from "~/services/auth.server";
 import { commitSession, getSession } from "~/services/session.server";
 
 export default function Screen() {
-    const { errorMessage } = useLoaderData<{ errorMessage?: string }>() || {};
+    const { errorMessage } = useLoaderData<{ errorMessage?: string }>() || {}
     return (
         <div>
             <Form method="post">
