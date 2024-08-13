@@ -1,6 +1,6 @@
 import { Authenticator } from 'remix-auth'
 import { sessionStorage } from '~/services/session.server'
-import { User } from '@prisma/client'
+import type { User } from '~/prisma/generated/zod'
 import { FormStrategy } from 'remix-auth-form'
 import { getUserBy } from '~/controllers/userController'
 import { verify } from '~/utils/passwordUtils'

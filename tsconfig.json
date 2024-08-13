@@ -18,12 +18,14 @@
     "resolveJsonModule": true,
     "target": "ES2022",
     "strict": true,
+    "strictNullChecks": true,
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./app/*"]
+      "~/*": ["./app/*"],
+      "~/prisma/generated/*": ["./prisma/generated/*"]
     },
 
     // Vite takes care of building everything, not tsc.

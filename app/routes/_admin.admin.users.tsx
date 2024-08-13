@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { authenticator } from '~/services/auth.server'
-import type { User } from '@prisma/client'
+import type { User } from '~/prisma/generated/zod'
 import { getAllUsers } from '~/controllers/userController'
 
 export const meta: MetaFunction = () => {
