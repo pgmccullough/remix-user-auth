@@ -31,20 +31,20 @@ export const deleteUser = async (userId: number) => {
   }
 };
 
-export const getUserByUsername = async (username: string) => {
+export const getUserBy = async (field: 'email' | 'id' | 'username', value: string) => {
   try {
     return await prisma.user.findFirst({
       where: {
-        username: {
-          equals: username,
+        [field]: {
+          equals: value,
           mode: 'insensitive',
         },
       },
-    });
+    })
   } catch (error) {
-    throw new Error(`Error fetching user: ${handlePrismaError(error)}`);
+    throw new Error(`Error fetching user: ${handlePrismaError(error)}`)
   }
-};
+}
 
 export const getAllUsers = async () => {
   try {

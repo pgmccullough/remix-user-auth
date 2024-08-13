@@ -2,7 +2,7 @@ import { Authenticator } from "remix-auth";
 import { sessionStorage } from "~/services/session.server";
 import { User } from "@prisma/client";
 import { FormStrategy } from "remix-auth-form";
-import { getUserByUsername } from "~/controllers/userController";
+import { getUserBy } from "~/controllers/userController";
 import { verify } from "~/utils/passwordUtils";
 
 export const authenticator = new Authenticator<User | null>(sessionStorage, {
@@ -16,7 +16,7 @@ authenticator.use(
         if (!username || !password) {
             throw new Error("Username and password are required.");
         }
-        const user = await getUserByUsername(username);
+        const user = await getUserBy('username',username);
         if (!user) {
             throw new Error("User not found.");
         }
