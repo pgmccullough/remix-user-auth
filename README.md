@@ -11,6 +11,9 @@ This guide explains how to set up PostgreSQL and pgAdmin using Docker Compose wi
 
 Create a `.env` file in your project root directory to store environment variables. Use the existing `.env.example` as a template.
 
+Check which `DATABASE_URL` is commented out. There is one for Windows / Mac
+and another for Linux. Comment / Uncomment the appropriate one for your system.
+
 ## Starting the Services
 
 To start the services, run the following command:
@@ -19,22 +22,8 @@ To start the services, run the following command:
 docker-compose up -d
 ```
 
-## Accessing pgAdmin
-
-1. Open your web browser and go to [http://localhost:8080](http://localhost:8080).
-2. Log in with the email and password defined in your `.env` file.
-
-## Connecting pgAdmin to PostgreSQL
-
-1. Open pgAdmin and create a new server connection. (Object > Register > Server)
-2. Set the hostname to `db` (the name of the PostgreSQL service in `docker-compose.yml`).
-3. Use username and password defined in your `.env` file.
-
 ## Initializing Database with Prisma
 
 1. Run the following command to generate the Prisma Client based on your schema: `npx prisma generate`
 2. Create a migration based on your schema by running: `npx prisma migrate dev --name init`
 3. Apply the migration to your database: `npx prisma migrate deploy`
-
-## Troubleshooting
-If struggling to connect, look up ip address of postgres db with `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres_db`. Use the returned IP as the host name / address in pgadmin and in place of `host.docker.internal` in `DATABASE_URL`
