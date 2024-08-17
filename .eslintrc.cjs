@@ -29,6 +29,12 @@ module.exports = {
     'indent': ['error', 2],
     'semi': ['error', 'never'],
     'quotes': ['error', 'single'],
+    'no-unused-vars': ['error', {
+      argsIgnorePattern: '^_', // Ignore variables starting with an underscore
+      varsIgnorePattern: '^_', // Ignore variables starting with an underscore
+      caughtErrorsIgnorePattern: '^_' // Ignore error objects starting with an underscore
+    }],
+    '@typescript-eslint/no-explicit-any': 'error'
   },
 
   overrides: [

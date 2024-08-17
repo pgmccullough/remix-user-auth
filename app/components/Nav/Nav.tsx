@@ -1,10 +1,9 @@
-import { Link } from '@remix-run/react'
-import { useAuth } from '~/AuthContext'
+import { useOutletContext , Link } from '@remix-run/react'
 import type { FC } from 'react'
+import { User } from '@prisma/client'
 
 export const Nav: FC = () => {
-  const { user } = useAuth()
-
+  const { user } = useOutletContext() as {user: User}
   return (
     <nav>
       <Link to="/">Home</Link>
