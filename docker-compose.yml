@@ -11,7 +11,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
-      - french-exchange
+      - postgres_db
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -26,11 +26,11 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:
-      - french-exchange
+      - postgres_db
 
 volumes:
   db_data:
   pgadmin_data:
 
 networks:
-  french-exchange:
+  postgres_db:

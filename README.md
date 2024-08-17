@@ -26,7 +26,7 @@ docker-compose up -d
 
 ## Connecting pgAdmin to PostgreSQL
 
-1. Open pgAdmin and create a new server connection.
+1. Open pgAdmin and create a new server connection. (Object > Register > Server)
 2. Set the hostname to `db` (the name of the PostgreSQL service in `docker-compose.yml`).
 3. Use username and password defined in your `.env` file.
 
@@ -36,4 +36,5 @@ docker-compose up -d
 2. Create a migration based on your schema by running: `npx prisma migrate dev --name init`
 3. Apply the migration to your database: `npx prisma migrate deploy`
 
-
+## Troubleshooting
+If struggling to connect, look up ip address of postgres db with `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres_db`. Use the returned IP as the host name / address in pgadmin and in place of `host.docker.internal` in `DATABASE_URL`
