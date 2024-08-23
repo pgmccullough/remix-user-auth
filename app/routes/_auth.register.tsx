@@ -64,13 +64,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   try {
-    await createUser(username, email, password);
+    await createUser(username, email, password)
     emailSender({
-      from: "patrick@descentrix.co",
-      to: "patrick.g.mccullough@gmail.com",
-      subject: "test for you",
-      text: "o hey lmao",
-      html: "<b>o hey</b> lmao"
+      from: 'patrick@descentrix.co',
+      to: 'patrick.g.mccullough@gmail.com',
+      subject: 'test for you',
+      text: 'o hey lmao',
+      html: '<b>o hey</b> lmao'
     })
     return redirect('/login')
   } catch (error) {

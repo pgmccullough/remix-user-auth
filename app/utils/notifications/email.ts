@@ -26,12 +26,12 @@ export const emailSender = async (email: {
       pass: 'dummy-password',
     },
   }
-  const { from, to, subject, text, html } = email;
+  const { from, to, subject, text, html } = email
   const { sendMail } = createTransport(smtpData)
   console.log(to, subject, text, html)
   try {
     await sendMail({from, to, subject, html})
-    console.log("SEND RESPONSE?", "i dunno");
+    console.log('SEND RESPONSE?', 'i dunno')
   } catch(error) {
     console.error(error)
   }
