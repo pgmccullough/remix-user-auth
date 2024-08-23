@@ -4,6 +4,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { createUser, getUserBy } from '~/controllers/userController'
 import { handlePrismaError } from '~/utils/prismaErrors'
 import { commitSession, getSession } from '~/services/session.server'
+import { emailSender } from '~/utils/notifications/email'
 
 type ActionData = {
   error?: string;
@@ -63,7 +64,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   try {
-    await createUser(username, email, password)
+    await createUser(username, email, password);
+    emailSender({
+      from: "patrick@descentrix.co",
+      to: "patrick.g.mccullough@gmail.com",
+      subject: "test for you",
+      text: "o hey lmao",
+      html: "<b>o hey</b> lmao"
+    })
     return redirect('/login')
   } catch (error) {
     return json<ActionData>({ error: `Error creating user: ${handlePrismaError(error)}` }, { status: 500 })

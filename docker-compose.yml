@@ -14,8 +14,21 @@ services:
     networks:
       - postgres_db
 
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=ses
+      - DEBUG=localstack:ses
+    volumes:
+      - "./volume:/var/lib/localstack"  # Correct volume mount here
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./create-db.sql:/docker-entrypoint-initdb.d/create_db.sql"
+
 volumes:
-  db:
+  db:  # Correctly define named volume
 
 networks:
   postgres_db:
