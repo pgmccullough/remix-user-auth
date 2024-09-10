@@ -14,7 +14,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const { user, userList } = useLoaderData<{ user?: User, userList?: Array<User> }>() || {}
-
+  
   if(user?.role !== 'admin') console.log('you should not have access to this...')
 
   return (

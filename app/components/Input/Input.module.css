@@ -1,0 +1,47 @@
+.fieldset {
+    border: none;
+    & .label {
+        font-size: 0.75rem;
+        display: block;
+        font-weight: 700;
+    }
+    & .legend {
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    & .input {
+        width: 100%;
+    }
+    & .inputHalfContainer {
+        display: flex;
+        width: 100%;
+        & .inputHalf {
+            width: 45%;
+        }
+        & .inputHalf:first-child {
+            margin-right: 10%;
+        }
+    }
+    & .radioRow {
+        display: flex;
+        justify-content: flex-start;
+        font-size: 0.75rem;
+        font-weight: 700;
+        & input {
+            width: auto;
+            margin: 0 .75rem;
+        }
+    }
+}
+
+.fieldset_100 {
+    flex-basis: 100%;
+}
+
+.grouping {
+    display: block;
+    width: 100%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-align: center;
+}

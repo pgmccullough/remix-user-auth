@@ -1,17 +1,19 @@
 import { json, redirect } from '@remix-run/node'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
+import { authenticator } from '~/services/auth.server'
 import { createUser, getUserBy } from '~/controllers/userController'
 import { handlePrismaError } from '~/utils/prismaErrors'
 import { commitSession, getSession } from '~/services/session.server'
+import { User } from '@prisma/client'
 
 type ActionData = {
   error?: string;
 };
 
-export default function Screen() {
+export default function Index() {
   const actionData = useActionData<ActionData>()
-  const { errorMessage } = useLoaderData<{ errorMessage?: string }>() || {}
+  const { errorMessage, user } = useLoaderData<{ errorMessage?: string, user?: User }>() || {}
 
   return (
     <div>
@@ -32,7 +34,7 @@ export default function Screen() {
         {actionData?.error && <div style={{ color: 'red' }}>{actionData.error}</div>}
         <button type="submit">Register</button>
       </Form>
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
+      {errorMessage && <div className="error-message">{errorMessage || ''}</div>}
     </div>
   )
 }
@@ -71,6 +73,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await authenticator.isAuthenticated(request)
   const session = await getSession(request.headers.get('Cookie'))
   const errorMessage = session.get('errorMessage')
   if(errorMessage) {
@@ -79,5 +82,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     })
     return json({ errorMessage }, { headers })
   }
+  if(user) return redirect('/')
   return null
 }
