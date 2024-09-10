@@ -8,14 +8,42 @@ datasource db {
 }
 
 model User {
-  id          Int         @id @default(autoincrement())
-  username    String      @unique
-  email       String      @unique
+  id          Int      @id @default(autoincrement())
+  username    String   @unique
+  email       String   @unique
   password    String
   salt        String
-  role        String      @default("user")
-  confirmCode String      @db.VarChar(6)
-  confirmed   Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  role        String   @default("user")
+  confirmCode String   @db.VarChar(6)
+  confirmed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  profile     Profile? @relation(fields: [profileId], references: [id])
+  profileId   Int?
+}
+
+model Profile {
+  id                                     Int       @id @default(autoincrement())
+  i_am_interested_in                     String?
+  member_name                            String?
+  constituent_society                    String?
+  members_wifes_name                     String?
+  child_applicants_full_name             String?
+  relationship_to_member                 String?
+  address_of_member_family               String?
+  lat_long                               String?
+  member_home_phone                      String?
+  member_cell_phone                      String?
+  member_email                           String?
+  childs_birthdate                       String?
+  extracurricular_activities_of_interest String?
+  sport_interests_of_the                 String?
+  proposed_dates_of_travel_start         String?
+  proposed_dates_of_travel_end           String?
+  proposed_hosting_dates_for_start       String?
+  proposed_hosting_dates_for_end         String?
+  family_members                         String?
+  applicant_child                        String?
+  userId                                 Int       @unique
+  User                                   User[]
 }
