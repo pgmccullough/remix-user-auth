@@ -1,19 +1,22 @@
 import { FC, useState } from 'react'
 import { AdvancedMarker, InfoWindow, useAdvancedMarkerRef } from '@vis.gl/react-google-maps'
+import type { Profile } from '@prisma/client'
 
-import style from './CustomMarker.module.css'
+// import style from './CustomMarker.module.css'
 
-export const CustomMarker:FC<{markerObj: any}> = ({markerObj}) => {
+
+export const CustomMarker:FC<{markerObj: Profile}> = ({markerObj}) => {
   const [infowindowOpen, setInfowindowOpen] = useState<boolean>(false)
   const [markerRef, marker] = useAdvancedMarkerRef()
-  console.log(markerObj)
-  if(!markerObj?.lat_long) return(<></>)
+  
+  const latLong = (markerObj?.lat_long && JSON.parse(markerObj.lat_long).lng) ? JSON.parse(markerObj?.lat_long) : {lat: 38.910405791235846, lng:  -77.04720670636921}
+
   return (
     <>
       <AdvancedMarker
         ref={markerRef}
         onClick={() => setInfowindowOpen(true)}
-        position={JSON.parse(markerObj?.lat_long)}
+        position={latLong}
         title={'AdvancedMarker that opens an Infowindow when clicked.'}
       />
       {infowindowOpen && (

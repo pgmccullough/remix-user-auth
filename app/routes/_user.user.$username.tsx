@@ -2,17 +2,16 @@ import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remi
 import { json } from '@remix-run/node'
 import { Form, useLoaderData } from '@remix-run/react'
 import { authenticator } from '~/services/auth.server'
-import type { User } from '@prisma/client'
+import type { Profile, User } from '@prisma/client'
 import { getUserBy } from '~/controllers/userController'
 import { Main } from '~/components/Main/Main'
 import { applyFields, Field } from '~/data/en/data'
 import { Input } from '~/components/Input/Input'
 import { Table } from '~/components/Table/Table'
 import { getProfileBy, updateProfile } from '~/controllers/profileController'
-
-import { AdvancedMarker, APIProvider, InfoWindow, Map, MapCameraChangedEvent, Pin, useAdvancedMarkerRef } from '@vis.gl/react-google-maps'
-import { useState } from 'react'
 import { ProgressBar } from '~/components/ProgressBar/ProgressBar'
+import { CustomMarker } from '~/components/CustomMarker/CustomMarker'
+import { MapWrapper } from '~/components/MapWrapper/MapWrapper'
 
 export const meta: MetaFunction = () => {
   return [
@@ -22,15 +21,23 @@ export const meta: MetaFunction = () => {
 }
 
 export default function Index() {
-  const { user, targetUser, profile, GMAPS_API_KEY } = useLoaderData<{ user?: User, targetUser: User, profile: { [ key: string ]: string, GMAPS_API_KEY: string } }>() || {}
+  const { user, targetUser, profile, GMAPS_API_KEY } = useLoaderData<{ user?: User, targetUser: User, profile: Profile, GMAPS_API_KEY: string }>() || {}
+  const totalFields = profile ? Object.entries(profile).length : 0
+  const completeFields = profile ? Object.values(profile).filter(val => val).length : 100
 
-  const [infowindowOpen, setInfowindowOpen] = useState<boolean>(false)
-  const [markerRef, marker] = useAdvancedMarkerRef()
+  /* MOVE THIS INTO A CONTROLLER, REUSABLE, WILL NEED TO ACCESS PRISMA
+     TO CHECK FOR RELATIONSHIPS/MATCHES */
+  const profileAccess = (userId: number | undefined, targetId: number) => {
+    return (
+      userId === targetId 
+        ? 'Edit'
+        // : 1===1 // check if target follows user
+        //   ? 'Read'
+          : ''
+    )
+  }
 
-  const totalFields = Object.entries(profile).length
-  const completeFields = Object.values(profile).filter(val => val).length
-
-  return user?.username === targetUser?.username ? (
+  return profileAccess(user?.id, targetUser.id) ? (
     <Main>
       <h1>{profile?.child_applicants_full_name || 'Profile'}</h1>
       <h2>Progress</h2>
@@ -49,7 +56,7 @@ export default function Index() {
                   key={label}
                   inputId={inputId}
                   label={label}
-                  storedValue={profile[inputId]||''}
+                  storedValue={profile && profile[inputId as keyof Profile] || ''}
                   type={type}
                   options={options}
                   width={width}
@@ -60,35 +67,19 @@ export default function Index() {
         </Table>
         <button type="submit">Submit</button>
       </Form>
-      <APIProvider apiKey={GMAPS_API_KEY} onLoad={() => console.log('Maps API has loaded.')}>
-        <div style={{width: '100%', minHeight: '400px', height: '30vh'}}>
-          <Map
-            defaultZoom={13}
-            defaultCenter={ { lat: JSON.parse(profile.lat_long||'{lat: \'\'}').lat, lng: JSON.parse(profile.lat_long||'{lng: \'\'}').lng } }
-            mapId="CURRENT_USER_PIN"
-            onCameraChanged={ (ev: MapCameraChangedEvent) =>
-              console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
-            }
-          >
-            <AdvancedMarker
-              ref={markerRef}
-              onClick={() => setInfowindowOpen(true)}
-              position={JSON.parse(profile.lat_long)}
-              title={'AdvancedMarker that opens an Infowindow when clicked.'}
-            />
-            {/* <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} /> */}
-            {infowindowOpen && (
-              <InfoWindow
-                anchor={marker}
-                maxWidth={200}
-                onCloseClick={() => setInfowindowOpen(false)}
-              >
-                  This is you. You live here.
-              </InfoWindow>
-            )}
-          </Map>
-        </div>
-      </APIProvider>
+      <MapWrapper
+        apiKey={GMAPS_API_KEY}
+        initCenter={(profile?.lat_long && JSON.parse(profile.lat_long).lng) ? JSON.parse(profile?.lat_long) : {lat: 38.910405791235846, lng:  -77.04720670636921}}
+        initZoom={4}
+      >
+        {
+          profile ? (
+            <CustomMarker markerObj={profile} />
+          ) : (
+            <></>
+          )
+        }
+      </MapWrapper>
       <h2>Documents</h2>
       <input type="file" />
     </Main>
@@ -101,7 +92,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const username = request.url.split('/').at(-1)
   const formData = new URLSearchParams(await request.text())
   if(username) updateProfile(username, Object.fromEntries(formData))
-  return 'double ds pretty please'
+  return ''
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
