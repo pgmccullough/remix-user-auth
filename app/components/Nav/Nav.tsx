@@ -12,6 +12,7 @@ export const Nav: FC = () => {
         user ? (
           <>
             <Link to="/admin/users">User Management</Link>
+            <Link to="/matches">Matches</Link>
             <Link to={`/user/${user.username.toLowerCase()}`}>My Account</Link>
             <form method="post" action="/logout">
               <button type="submit">Logout</button>
